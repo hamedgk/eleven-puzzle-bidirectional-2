@@ -9,7 +9,13 @@ const (
 )
 
 const (
-	Rows  = 3
-	Cols  = 4
-	Blank = 255
+	Rows      = 3
+	Cols      = 4
+	Blank     = 255
+	BlankStr = "@@"
+
+	MaxUint = ^uint(0)
+	MinUint = 0
+	MaxInt  = int(MaxUint >> 1)
+	MinInt  = -MaxInt - 1
 )

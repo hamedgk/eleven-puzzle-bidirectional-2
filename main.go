@@ -4,12 +4,19 @@ import (
 	ds "eleven-puzzle/data_structures"
 	"eleven-puzzle/data_structures/puzzle"
 	"eleven-puzzle/helpers"
+	"fmt"
 )
 
 var examplePuzzle = puzzle.PuzzleBuffer{
-	{6, 4, 255, 8},
-	{5, 11, 1, 2},
-	{7, 9, 3, 10},
+	//{6, 4, 255, 8},
+	//{5, 11, 1, 2},
+	//{7, 9, 3, 10},
+
+	//kazemini example
+	{2, 7, 255, 6},
+	{1, 7, 3, 8},
+	{4, 5, 2, 4},
+
 	//{1, 1, 1, 1},
 	//{1, 0, 1, 1},
 	//{255, 1, 1, 1},
@@ -42,8 +49,13 @@ func main() {
 		if node, ok := sourceFrontier.Dequeue(); ok {
 			if found := helpers.Intersect(node, targetExplored); found {
 				if foundNode, found := helpers.SearchInNodes(node, targetFrontier); found {
-					ds.TraceBack(node)
-					ds.TraceForward(foundNode)
+					scounter := 0
+					tcounter := 0
+					ds.TraceBack(node, &scounter)
+					fmt.Println("********************")
+					ds.TraceForward(foundNode, &tcounter)
+					fmt.Printf("\nSteps: %d\n", scounter+tcounter)
+					fmt.Printf("\nNodes: %d\n", len(sourceExplored)+len(targetExplored))
 					return
 				} else {
 					panic("found but not located !!!!")
@@ -54,8 +66,13 @@ func main() {
 		if node, ok := targetFrontier.Dequeue(); ok {
 			if found := helpers.Intersect(node, sourceExplored); found {
 				if foundNode, found := helpers.SearchInNodes(node, sourceFrontier); found {
-					ds.TraceBack(foundNode)
-					ds.TraceForward(node)
+					scounter := 0
+					tcounter := 0
+					ds.TraceBack(foundNode, &scounter)
+					fmt.Println("********************")
+					ds.TraceForward(node, &tcounter)
+					fmt.Printf("\nSteps: %d\n", scounter+tcounter)
+					fmt.Printf("\nNodes: %d\n", len(sourceExplored)+len(targetExplored))
 					return
 				} else {
 					panic("found but not located !!!!")

@@ -3,6 +3,10 @@ package data_structures
 import (
 	"eleven-puzzle/data_structures/puzzle"
 	"fmt"
+	"os"
+	"text/tabwriter"
+
+	"github.com/fatih/color"
 )
 
 type Node struct {
@@ -30,43 +34,74 @@ func (node *Node) IsGoal(buffer puzzle.PuzzleBuffer) bool {
 	return node.Puzzle.Buffer == buffer
 }
 
-func TraceBack(node Node) {
+func TraceBack(node Node, counter *int) {
 	if node.Parent == nil {
-		fmt.Print("init")
+		fmt.Println()
+		node.Print()
 		return
 	}
 
-	TraceBack(*node.Parent)
+	TraceBack(*node.Parent, counter)
+	*counter++
 	switch node.Direction {
 	case puzzle.Up:
-		fmt.Print(" -> Up")
+		fmt.Println()
+		node.Print()
 	case puzzle.Down:
-		fmt.Print(" -> Down")
+		fmt.Println()
+		node.Print()
 	case puzzle.Right:
-		fmt.Print(" -> Right")
+		fmt.Println()
+		node.Print()
 	case puzzle.Left:
-		fmt.Print(" -> Left")
+		fmt.Println()
+		node.Print()
 	default:
 		return
 	}
 }
 
-func TraceForward(node Node) {
+func TraceForward(node Node, counter *int) {
 	if node.Parent == nil {
+		fmt.Println()
+		node.Print()
 		return
 	}
 
+	*counter++
 	switch node.Direction {
 	case puzzle.Up:
-		fmt.Print(" -> Down")
+		fmt.Println()
+		node.Print()
 	case puzzle.Down:
-		fmt.Print(" -> Up")
+		fmt.Println()
+		node.Print()
 	case puzzle.Right:
-		fmt.Print(" -> Left")
+		fmt.Println()
+		node.Print()
 	case puzzle.Left:
-		fmt.Print(" -> Right")
+		fmt.Println()
+		node.Print()
 	default:
 		return
 	}
-	TraceForward(*node.Parent)
+	TraceForward(*node.Parent, counter)
+}
+
+func (node Node) Print() {
+	greenBold := color.New(color.FgGreen, color.Bold)
+	red := color.New(color.FgHiYellow, color.Bold)
+	w := tabwriter.NewWriter(os.Stdout, 4, 1, 2, ' ', 0)
+	for i := 0; i < puzzle.Rows; i++ {
+		for j := 0; j < puzzle.Cols; j++ {
+			if node.Puzzle.Buffer[i][j] == puzzle.Blank {
+				red.Fprintf(w, "%v\t", puzzle.BlankStr)
+			} else {
+				greenBold.Fprintf(w, "%v\t", node.Puzzle.Buffer[i][j])
+			}
+		}
+		fmt.Fprintln(w)
+	}
+	w.Flush()
+	color.Cyan("----------------------------")
 }
